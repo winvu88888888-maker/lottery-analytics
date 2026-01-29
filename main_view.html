@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<script>
+    if (sessionStorage.getItem('auth') !== 'true') window.location.href = 'index.html';
+</script>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 AI Lottery Analytics Pro | Advanced Prediction System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Theme Toggle & Logout -->
+    <div class="top-controls">
+        <button id="theme-toggle" class="icon-btn" title="Đổi chế độ sáng/tối">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+        </button>
+        <button id="logout-btn" class="icon-btn" title="Đăng xuất">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>🎯 AI Analytics</h2>
+            <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" data-section="dashboard">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                </svg>
+                <span>Dashboard</span>
+            </li>
+            <li class="nav-item" data-section="ai-predict">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg>
+                <span>AI Dự Đoán</span>
+            </li>
+            <li class="nav-item" data-section="advanced-stats">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="20" x2="12" y2="10" />
+                    <line x1="18" y1="20" x2="18" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="16" />
+                </svg>
+                <span>Thống Kê Nâng Cao</span>
+            </li>
+            <li class="nav-item" data-section="favorites">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+                <span>Số Yêu Thích</span>
+            </li>
+            <li class="nav-item" data-section="history">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Lịch Sử</span>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content" id="main-content">
+        <!-- Mode Controls -->
+        <div class="controls">
+            <button id="mega-btn" class="btn active">🎰 Mega 6/45</button>
+            <button id="power-btn" class="btn">⚡ Power 6/55</button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <section id="section-dashboard" class="content-section active">
+            <h2 class="section-title">📊 Dashboard Tổng Quan</h2>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>📈 Thống Kê Chính</h3>
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <div class="stat-label">Tổng Số Kỳ</div>
+                            <div id="total-draws" class="stat-value">--</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Jackpot Hiện Tại</div>
+                            <div id="latest-jackpot" class="stat-value">--</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Ngày Bắt Đầu</div>
+                            <div id="start-date" class="stat-value">--</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Dòng Tiền (Kỳ Cuối)</div>
+                            <div id="latest-cashflow" class="stat-value">--</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📉 Xu Hướng Jackpot</h3>
+                    <canvas id="jackpot-chart"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>🔢 Tần Suất Xuất Hiện</h3>
+                    <canvas id="frequency-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Prediction Section -->
+        <section id="section-ai-predict" class="content-section">
+            <h2 class="section-title">🤖 AI Dự Đoán Thông Minh</h2>
+
+            <div class="prediction-grid">
+                <div class="card prediction-card">
+                    <h3>🎯 Dự Đoán AI</h3>
+                    <p class="card-desc">Phân tích dựa trên lịch sử và xu hướng</p>
+                    <div id="ai-prediction-result" class="prediction-result">
+                        <div class="loading">Đang phân tích dữ liệu...</div>
+                    </div>
+                    <button id="generate-prediction" class="btn btn-primary">🔮 Tạo Dự Đoán Mới</button>
+                    <div class="prediction-confidence">
+                        <span>Độ tin cậy: <strong id="confidence-score">--</strong></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🎲 Trình Tạo Số Thông Minh</h3>
+                    <p class="card-desc">Kết hợp phân tích thống kê và ngẫu nhiên</p>
+                    <div class="number-generator">
+                        <div class="generator-options">
+                            <label>
+                                <input type="radio" name="gen-mode" value="hot" checked> Số Nóng
+                            </label>
+                            <label>
+                                <input type="radio" name="gen-mode" value="cold"> Số Lạnh
+                            </label>
+                            <label>
+                                <input type="radio" name="gen-mode" value="balanced"> Cân Bằng
+                            </label>
+                            <label>
+                                <input type="radio" name="gen-mode" value="random"> Ngẫu Nhiên
+                            </label>
+                        </div>
+                        <button id="smart-generate" class="btn btn-secondary">🎰 Tạo Bộ Số</button>
+                        <div id="generated-numbers" class="generated-numbers"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Phân Tích Xu Hướng</h3>
+                    <div id="trend-analysis" class="trend-analysis">
+                        <div class="trend-item">
+                            <span class="trend-label">Xu hướng tăng:</span>
+                            <span id="trend-up" class="trend-value">--</span>
+                        </div>
+                        <div class="trend-item">
+                            <span class="trend-label">Xu hướng giảm:</span>
+                            <span id="trend-down" class="trend-value">--</span>
+                        </div>
+                        <div class="trend-item">
+                            <span class="trend-label">Số xuất hiện gần đây:</span>
+                            <span id="recent-numbers" class="trend-value">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Stats Section -->
+        <section id="section-advanced-stats" class="content-section">
+            <h2 class="section-title">📊 Thống Kê Nâng Cao</h2>
+
+            <div class="stats-grid">
+                <div class="card">
+                    <h3>🔥 Top Số Nóng (Hot Numbers)</h3>
+                    <div id="hot-numbers" class="number-list"></div>
+                </div>
+
+                <div class="card">
+                    <h3>❄️ Top Số Lạnh (Cold Numbers)</h3>
+                    <div id="cold-numbers" class="number-list"></div>
+                </div>
+
+                <div class="card">
+                    <h3>👥 Cặp Số Thường Xuất Hiện</h3>
+                    <div id="number-pairs" class="pairs-list"></div>
+                </div>
+
+                <div class="card">
+                    <h3>📈 Phân Tích Chẵn/Lẻ</h3>
+                    <canvas id="even-odd-chart"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Phân Bố Theo Khoảng</h3>
+                    <canvas id="range-distribution-chart"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>⏱️ Khoảng Cách Xuất Hiện</h3>
+                    <div id="gap-analysis" class="gap-analysis"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Favorites Section -->
+        <section id="section-favorites" class="content-section">
+            <h2 class="section-title">⭐ Số Yêu Thích Của Tôi</h2>
+
+            <div class="favorites-container">
+                <div class="card">
+                    <h3>➕ Thêm Bộ Số Mới</h3>
+                    <div class="add-favorite-form">
+                        <input type="text" id="favorite-name" placeholder="Tên bộ số (VD: Bộ số may mắn)">
+                        <div id="favorite-number-inputs" class="number-inputs"></div>
+                        <button id="add-favorite-btn" class="btn btn-primary">💾 Lưu Bộ Số</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📋 Danh Sách Yêu Thích</h3>
+                    <div id="favorites-list" class="favorites-list"></div>
+                </div>
+
+                <div class="card">
+                    <h3>🔍 Kiểm Tra Kết Quả</h3>
+                    <p class="card-desc">Xem bộ số của bạn đã trúng bao nhiêu lần</p>
+                    <div id="check-results" class="check-results"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="section-history" class="content-section">
+            <h2 class="section-title">📜 Lịch Sử Các Kỳ Quay</h2>
+
+            <div class="search-bar">
+                <input type="text" id="draw-search" placeholder="🔍 Tìm theo ngày hoặc kết quả...">
+            </div>
+
+            <div class="table-wrapper">
+                <table id="draw-table">
+                    <thead>
+                        <tr>
+                            <th>Kỳ</th>
+                            <th>Ngày Quay</th>
+                            <th>Kết Quả</th>
+                            <th id="th-jackpot">Jackpot</th>
+                            <th>Dòng Tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div id="pagination" class="pagination"></div>
+        </section>
+    </main>
+
+    <script src="logic.js"></script>
+</body>
+
+</html>

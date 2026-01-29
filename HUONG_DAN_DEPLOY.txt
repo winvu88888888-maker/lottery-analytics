@@ -1,0 +1,137 @@
+═══════════════════════════════════════════════════════════════
+   🚀 HƯỚNG DẪN DEPLOY LÊN WEB - SIÊU ĐƠN GIẢN
+═══════════════════════════════════════════════════════════════
+
+📁 Thư mục: C:\Users\HQSP\Desktop\ABCDEF\
+
+═══════════════════════════════════════════════════════════════
+   CÁCH 1: TỰ ĐỘNG (KHUYÊN DÙNG) ⚡
+═══════════════════════════════════════════════════════════════
+
+BƯỚC 1: Cài Git (nếu chưa có)
+   ├─ Tải tại: https://git-scm.com/download/win
+   ├─ Cài đặt với các tùy chọn mặc định
+   └─ Khởi động lại máy tính
+
+BƯỚC 2: Tạo Repository trên GitHub
+   ├─ Vào: https://github.com/new
+   ├─ Repository name: lottery-analytics (hoặc tên bạn thích)
+   ├─ Chọn: Public
+   ├─ KHÔNG tick "Add a README file"
+   └─ Nhấn "Create repository"
+
+BƯỚC 3: Chạy file tự động
+   ├─ Nhấp đúp: DEPLOY_TO_WEB.bat
+   ├─ Nhập GitHub username
+   ├─ Nhập tên repository (VD: lottery-analytics)
+   └─ Đợi hoàn tất
+
+BƯỚC 4: Bật GitHub Pages
+   ├─ Vào repository vừa tạo trên GitHub
+   ├─ Nhấn "Settings" (góc trên phải)
+   ├─ Chọn "Pages" (menu bên trái)
+   ├─ Tại "Branch", chọn: main
+   ├─ Nhấn "Save"
+   └─ Đợi 1-2 phút
+
+BƯỚC 5: Truy cập website
+   └─ Link: https://[username].github.io/[repo-name]
+   └─ Mật khẩu: 1987
+
+═══════════════════════════════════════════════════════════════
+   CÁCH 2: THỦ CÔNG (Nếu cách 1 lỗi)
+═══════════════════════════════════════════════════════════════
+
+BƯỚC 1: Tạo repository trên GitHub (như trên)
+
+BƯỚC 2: Mở Command Prompt
+   ├─ Nhấn Windows + R
+   ├─ Gõ: cmd
+   └─ Nhấn Enter
+
+BƯỚC 3: Di chuyển vào thư mục
+   └─ Gõ: cd C:\Users\HQSP\Desktop\ABCDEF
+
+BƯỚC 4: Chạy lệnh Git
+   ├─ git init
+   ├─ git add .
+   ├─ git commit -m "Initial commit"
+   ├─ git branch -M main
+   ├─ git remote add origin https://github.com/[username]/[repo].git
+   └─ git push -u origin main
+
+BƯỚC 5: Bật GitHub Pages (như trên)
+
+═══════════════════════════════════════════════════════════════
+   CÁCH 3: DÙNG GITHUB DESKTOP (Đơn giản nhất)
+═══════════════════════════════════════════════════════════════
+
+BƯỚC 1: Tải GitHub Desktop
+   └─ Tải tại: https://desktop.github.com/
+
+BƯỚC 2: Đăng nhập GitHub
+
+BƯỚC 3: Add repository
+   ├─ File → Add Local Repository
+   ├─ Chọn thư mục: C:\Users\HQSP\Desktop\ABCDEF
+   └─ Nhấn "Add Repository"
+
+BƯỚC 4: Publish
+   ├─ Nhấn "Publish repository"
+   ├─ Đặt tên: lottery-analytics
+   ├─ Bỏ tick "Keep this code private"
+   └─ Nhấn "Publish Repository"
+
+BƯỚC 5: Bật GitHub Pages (như trên)
+
+═══════════════════════════════════════════════════════════════
+   ✨ TÍNH NĂNG TỰ ĐỘNG
+═══════════════════════════════════════════════════════════════
+
+✅ Tự động cập nhật dữ liệu mỗi ngày lúc 8:00 sáng
+✅ Chạy 24/7 miễn phí trên GitHub Pages
+✅ Truy cập từ mọi thiết bị
+✅ Không cần server riêng
+
+═══════════════════════════════════════════════════════════════
+   🔧 XỬ LÝ LỖI THƯỜNG GẶP
+═══════════════════════════════════════════════════════════════
+
+LỖI: "Git is not recognized"
+   └─ Giải pháp: Cài Git và khởi động lại máy
+
+LỖI: "Permission denied"
+   └─ Giải pháp: Đăng nhập GitHub trong Git
+      ├─ git config --global user.name "Your Name"
+      └─ git config --global user.email "your@email.com"
+
+LỖI: "Repository not found"
+   └─ Giải pháp: Kiểm tra lại tên repository và username
+
+LỖI: "Failed to push"
+   └─ Giải pháp: Dùng Personal Access Token
+      ├─ Vào: https://github.com/settings/tokens
+      ├─ Generate new token (classic)
+      ├─ Chọn quyền: repo
+      └─ Dùng token thay vì mật khẩu khi push
+
+═══════════════════════════════════════════════════════════════
+   📞 HỖ TRỢ
+═══════════════════════════════════════════════════════════════
+
+Nếu gặp khó khăn:
+1. Đọc kỹ hướng dẫn
+2. Thử lại từ đầu
+3. Dùng cách khác
+4. Liên hệ AI để được hỗ trợ
+
+═══════════════════════════════════════════════════════════════
+   🎉 CHÚC MỪNG!
+═══════════════════════════════════════════════════════════════
+
+Website của bạn sẽ online 24/7 tại:
+https://[username].github.io/[repo-name]
+
+Mật khẩu: 1987
+
+Chia sẻ link này cho bạn bè để họ cùng sử dụng! 🚀

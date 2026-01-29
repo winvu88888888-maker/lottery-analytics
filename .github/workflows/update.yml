@@ -1,0 +1,32 @@
+name: Auto Data Update
+
+on:
+  schedule:
+    - cron: '30 11 * * *' # Chạy lúc 18:30 hàng ngày theo giờ VN (sau khi có kq Vietlott)
+  workflow_dispatch: # Cho phép chạy tay nếu thích
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Sync Data
+        run: python data_sync.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "Robot Data Sync"
+          git config --global user.email "bot@example.com"
+          git add db_storage.json
+          git commit -m "Auto update database [skip ci]" || echo "No changes to commit"
+          git push
