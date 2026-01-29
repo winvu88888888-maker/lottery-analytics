@@ -1,0 +1,37 @@
+═══════════════════════════════════════════════════════════════
+   🎯 HƯỚNG DẪN DEPLOY BẰNG GITHUB DESKTOP (DỄ NHẤT)
+═══════════════════════════════════════════════════════════════
+
+BƯỚC 1: Tải GitHub Desktop
+   └─ Link: https://desktop.github.com/
+
+BƯỚC 2: Cài đặt và đăng nhập
+   ├─ Cài đặt GitHub Desktop
+   ├─ Mở lên
+   ├─ Đăng nhập với tài khoản: cuongtan
+   └─ Cho phép các quyền
+
+BƯỚC 3: Add Local Repository
+   ├─ File → Add Local Repository
+   ├─ Chọn thư mục: C:\Users\HQSP\Desktop\ABCDEF
+   ├─ Nếu hỏi "create a repository", chọn "Create"
+   └─ Nhấn "Create Repository"
+
+BƯỚC 4: Publish to GitHub
+   ├─ Nhấn nút "Publish repository" (góc trên)
+   ├─ Name: lottery-analytics
+   ├─ Description: AI Lottery Analytics Pro
+   ├─ BỎ TICK "Keep this code private"
+   └─ Nhấn "Publish Repository"
+
+BƯỚC 5: Bật GitHub Pages
+   ├─ Vào: https://github.com/cuongtan/lottery-analytics
+   ├─ Settings → Pages
+   ├─ Branch: main → Save
+   └─ Đợi 1-2 phút
+
+XONG! Website: https://cuongtan.github.io/lottery-analytics
+
+═══════════════════════════════════════════════════════════════
+   💡 CÁCH NÀY DỄ NHẤT - KHÔNG CẦN TOKEN!
+═══════════════════════════════════════════════════════════════
