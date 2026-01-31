@@ -99,6 +99,74 @@ function setupEventListeners() {
         sessionStorage.removeItem('auth');
         window.location.href = 'index.html';
     });
+
+    // 🚀 Ultra AI System v2.0
+    const ultraAIBtn = document.getElementById('run-ultra-ai');
+    if (ultraAIBtn) {
+        ultraAIBtn.addEventListener('click', async () => {
+            const resultsContainer = document.getElementById('ultra-ai-results');
+            resultsContainer.innerHTML = `
+                <div class="ai-loading" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🧠</div>
+                    <div style="font-size: 1.2rem; color: var(--primary);">Đang chạy 8 thuật toán AI tiên tiến...</div>
+                    <div style="margin-top: 1rem; color: var(--text-muted);">Neural Network → Monte Carlo → Markov Chain → Deep Pattern...</div>
+                </div>
+            `;
+
+            try {
+                const result = await window.ultraAI.runAll();
+                window.ultraAI.display(resultsContainer, result);
+                showNotification('🚀 Ultra AI System v2.0 đã hoàn tất phân tích!', 'success');
+            } catch (error) {
+                console.error('Ultra AI Error:', error);
+                resultsContainer.innerHTML = `<div style="color: #ef4444; text-align: center;">Lỗi: ${error.message}</div>`;
+                showNotification('Lỗi khi chạy Ultra AI!', 'error');
+            }
+        });
+    }
+
+    // 🔮 Quantum AI - Maximum Optimization
+    const quantumAIBtn = document.getElementById('run-quantum-ai');
+    if (quantumAIBtn) {
+        quantumAIBtn.addEventListener('click', async () => {
+            const resultsContainer = document.getElementById('quantum-ai-results');
+            resultsContainer.innerHTML = `
+                <div class="ai-loading" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem; animation: pulse 1s infinite;">🔮</div>
+                    <div style="font-size: 1.3rem; background: linear-gradient(135deg, #22d3ee, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        Đang tối ưu hóa với Genetic Algorithm...
+                    </div>
+                    <div style="margin-top: 1rem; color: var(--text-muted);">
+                        300 cá thể × 150 thế hệ tiến hóa
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                            <div style="width: 0%; height: 100%; background: linear-gradient(90deg, #22d3ee, #6366f1, #a855f7); border-radius: 3px; animation: loadingBar 3s forwards;"></div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    @keyframes loadingBar {
+                        0% { width: 0%; }
+                        100% { width: 100%; }
+                    }
+                </style>
+            `;
+
+            // Use setTimeout to allow UI to update
+            setTimeout(() => {
+                try {
+                    const result = window.quantumAI.run();
+                    window.quantumAI.display(resultsContainer, result);
+                    showNotification('🔮 Quantum AI đã hoàn tất tối ưu hóa!', 'success');
+                } catch (error) {
+                    console.error('Quantum AI Error:', error);
+                    resultsContainer.innerHTML = `<div style="color: #ef4444; text-align: center; padding: 2rem;">Lỗi: ${error.message}</div>`;
+                    showNotification('Lỗi khi chạy Quantum AI!', 'error');
+                }
+            }, 100);
+        });
+    }
 }
 
 // ============================================

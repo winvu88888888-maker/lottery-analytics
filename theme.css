@@ -946,3 +946,331 @@ tr:hover {
     color: var(--text-muted);
     margin-bottom: 0.25rem;
 }
+
+/* ============================================
+   🚀 ULTRA AI SYSTEM v2.0 STYLES
+   ============================================ */
+
+.ultra-ai-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.ultra-ai-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg,
+            transparent,
+            rgba(99, 102, 241, 0.1),
+            transparent,
+            rgba(168, 85, 247, 0.1),
+            transparent);
+    animation: rotate-gradient 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate-gradient {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.ultra-ai-card h3 {
+    background: linear-gradient(135deg, #6366f1, #a855f7, #22d3ee);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.3rem;
+}
+
+.ultra-ai-results {
+    position: relative;
+    z-index: 1;
+}
+
+.ultra-ai-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.ai-result-card {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.ai-result-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+}
+
+.ai-result-card .balls {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+}
+
+.ai-result-card .ball {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+    transition: transform 0.3s ease;
+}
+
+.ai-result-card .ball:hover {
+    transform: scale(1.2);
+}
+
+/* Ultra Meta-AI Final Result */
+.final-result {
+    position: relative;
+    overflow: hidden;
+}
+
+.final-result::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg,
+            transparent 0%,
+            rgba(99, 102, 241, 0.1) 50%,
+            transparent 100%);
+    animation: shimmer 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.final-result .ball {
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 4px 25px rgba(168, 85, 247, 0.6);
+    }
+}
+
+/* AI Loading Animation */
+.ai-loading {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Advanced AI Groups */
+.ai-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.ai-group {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border);
+}
+
+.ai-group:hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.ai-group h4 {
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.ai-group p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Progress Indicators */
+.advanced-ai-progress {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+.progress-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.progress-item.complete {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+}
+
+.progress-item.running {
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--primary);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Advanced Final Result Card */
+.advanced-final-result {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.advanced-final-result .balls {
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.advanced-final-result .ball {
+    width: 55px;
+    height: 55px;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    animation: bounce-in 0.5s ease;
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Top Candidates Display */
+.top-candidates {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.candidate-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.candidate-item .num {
+    background: var(--primary);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.candidate-item .votes {
+    color: var(--text-muted);
+}
+
+/* Confidence Bar */
+.confidence-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.confidence-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--success));
+    border-radius: 4px;
+    transition: width 1s ease;
+}
+
+/* Responsive for Ultra AI */
+@media (max-width: 768px) {
+    .ultra-ai-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-groups {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ai-result-card .ball {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .final-result .ball {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+}
