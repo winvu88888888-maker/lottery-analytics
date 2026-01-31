@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Lottery Analytics - Simple Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #6366f1;
+        }
+
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            background: #2a2a3e;
+        }
+
+        .success {
+            border-left: 4px solid #10b981;
+        }
+
+        .error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .loading {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: #2a2a3e;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #6366f1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: #2a2a3e;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #3a3a4e;
+        }
+
+        th {
+            background: #1a1a2e;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #3a3a4e;
+        }
+
+        .ball {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #fff, #ddd);
+            color: #333;
+            font-weight: bold;
+            margin: 0 3px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎯 Lottery Analytics - Simple Version</h1>
+
+        <div class="controls" style="text-align: center; margin: 20px 0;">
+            <button class="btn" onclick="loadMode('mega')">🎰 Mega 6/45</button>
+            <button class="btn" onclick="loadMode('power')">⚡ Power 6/55</button>
+        </div>
+
+        <div id="status" class="status loading">⏳ Đang tải dữ liệu...</div>
+
+        <div id="stats" class="stats"></div>
+
+        <div id="table-container"></div>
+    </div>
+
+    <script>
+        let allData = null;
+        let currentMode = 'mega';
+
+        async function loadData() {
+            try {
+                document.getElementById('status').innerHTML = '⏳ Đang tải dữ liệu từ db_storage.json...';
+
+                const response = await fetch('db_storage.json');
+
+                if (!response.ok) {
+                    throw new Error(`Không thể tải file! HTTP ${response.status}`);
+                }
+
+                const rawData = await response.json();
+
+                // Convert string to numbers
+                allData = {
+                    mega: rawData.mega.map(d => ({
+                        ...d,
+                        numbers: d.numbers.map(n => parseInt(n)),
+                        jackpot: parseInt(d.jackpot)
+                    })),
+                    power: rawData.power.map(d => ({
+                        ...d,
+                        numbers: d.numbers.map(n => parseInt(n)),
+                        jackpot1: parseInt(d.jackpot1),
+                        jackpot2: parseInt(d.jackpot2)
+                    }))
+                };
+
+                document.getElementById('status').className = 'status success';
+                document.getElementById('status').innerHTML = `
+                    ✅ Tải thành công!<br>
+                    📊 Mega: ${allData.mega.length} kỳ | ⚡ Power: ${allData.power.length} kỳ
+                `;
+
+                renderData();
+
+            } catch (error) {
+                document.getElementById('status').className = 'status error';
+                document.getElementById('status').innerHTML = `
+                    ❌ Lỗi: ${error.message}<br><br>
+                    <strong>Hướng dẫn khắc phục:</strong><br>
+                    1. Kiểm tra file db_storage.json có trong thư mục không<br>
+                    2. Mở bằng trình duyệt khác (Chrome, Edge, Firefox)<br>
+                    3. Nhấn F12 → Console để xem lỗi chi tiết
+                `;
+                console.error('Error:', error);
+            }
+        }
+
+        function loadMode(mode) {
+            currentMode = mode;
+            renderData();
+        }
+
+        function renderData() {
+            if (!allData) return;
+
+            const data = allData[currentMode];
+            const latest = data[data.length - 1];
+
+            // Stats
+            const statsHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Tổng số kỳ</div>
+                    <div class="stat-value">${data.length}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Jackpot hiện tại</div>
+                    <div class="stat-value">${formatMoney(currentMode === 'mega' ? latest.jackpot : latest.jackpot1)}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Kỳ đầu tiên</div>
+                    <div class="stat-value">${data[0].date}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Kỳ mới nhất</div>
+                    <div class="stat-value">${latest.date}</div>
+                </div>
+            `;
+            document.getElementById('stats').innerHTML = statsHTML;
+
+            // Table
+            const reversed = [...data].reverse();
+            const rows = reversed.slice(0, 100).map((d, idx) => `
+                <tr>
+                    <td>${data.length - idx}</td>
+                    <td>${d.date}</td>
+                    <td>${d.numbers.map(n => `<span class="ball">${n}</span>`).join('')}</td>
+                    <td>${formatMoney(currentMode === 'mega' ? d.jackpot : d.jackpot1)}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('table-container').innerHTML = `
+                <h2 style="margin-top: 30px;">📜 100 Kỳ Gần Nhất (${currentMode === 'mega' ? 'Mega 6/45' : 'Power 6/55'})</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kỳ</th>
+                            <th>Ngày</th>
+                            <th>Kết quả</th>
+                            <th>Jackpot</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        function formatMoney(num) {
+            if (!num) return '0 ₫';
+            return (num / 1e9).toFixed(1) + ' tỷ';
+        }
+
+        // Auto load on page load
+        loadData();
+    </script>
+</body>
+
+</html>

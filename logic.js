@@ -19,17 +19,39 @@ let rangeChart = null;
 async function init() {
     try {
         const response = await fetch('db_storage.json');
-        allData = await response.json();
+        const rawData = await response.json();
+
+        // Convert string numbers to integers
+        allData = {
+            mega: rawData.mega.map(draw => ({
+                ...draw,
+                numbers: draw.numbers.map(n => parseInt(n)),
+                bonus: draw.bonus ? parseInt(draw.bonus) : null,
+                jackpot: parseInt(draw.jackpot)
+            })),
+            power: rawData.power.map(draw => ({
+                ...draw,
+                numbers: draw.numbers.map(n => parseInt(n)),
+                bonus: draw.bonus ? parseInt(draw.bonus) : null,
+                jackpot1: parseInt(draw.jackpot1),
+                jackpot2: parseInt(draw.jackpot2)
+            }))
+        };
+
+        console.log('Loaded data:', {
+            mega: allData.mega.length + ' draws',
+            power: allData.power.length + ' draws'
+        });
 
         setupEventListeners();
         setupNavigation();
         setupThemeToggle();
         loadFavorites();
         renderDashboard();
-        showNotification('Dữ liệu đã được tải thành công!', 'success');
+        showNotification(`Đã tải ${allData.mega.length} kỳ Mega và ${allData.power.length} kỳ Power!`, 'success');
     } catch (error) {
         console.error("Error loading data:", error);
-        showNotification('Lỗi tải dữ liệu. Vui lòng thử lại!', 'error');
+        showNotification('Lỗi tải dữ liệu: ' + error.message, 'error');
     }
 }
 
@@ -792,10 +814,10 @@ function renderTable(searchTerm = '') {
         const tr = document.createElement('tr');
         tr.className = 'fade-in';
 
-        const originalIndex = data.length - (start + idx);
+        const originalIndex = data.length - 1 - (start + idx);
 
         const nextDraw = allData[currentMode][originalIndex];
-        const prevDraw = allData[currentMode][originalIndex - 2];
+        const prevDraw = allData[currentMode][originalIndex - 1];
         let cfStr = '--';
         if (prevDraw) {
             const v1 = currentMode === 'mega' ? d.jackpot : d.jackpot1;

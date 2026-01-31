@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Data Loading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .status {
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: #2a2a2a;
+        }
+
+        .success {
+            border-left: 4px solid #10b981;
+        }
+
+        .error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        pre {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Test Tải Dữ Liệu</h1>
+    <div id="status"></div>
+    <div id="data"></div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const dataDiv = document.getElementById('data');
+
+        async function testLoadData() {
+            try {
+                statusDiv.innerHTML = '<div class="status info">⏳ Đang tải dữ liệu...</div>';
+
+                const response = await fetch('db_storage.json');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const rawData = await response.json();
+
+                statusDiv.innerHTML = `
+                    <div class="status success">
+                        ✅ Tải dữ liệu thành công!<br>
+                        📊 Mega: ${rawData.mega ? rawData.mega.length : 0} kỳ<br>
+                        ⚡ Power: ${rawData.power ? rawData.power.length : 0} kỳ
+                    </div>
+                `;
+
+                // Hiển thị mẫu dữ liệu
+                if (rawData.mega && rawData.mega.length > 0) {
+                    const sample = rawData.mega[rawData.mega.length - 1];
+                    dataDiv.innerHTML = `
+                        <h2>📋 Dữ liệu mẫu (Kỳ cuối Mega):</h2>
+                        <pre>${JSON.stringify(sample, null, 2)}</pre>
+                        
+                        <h2>🎯 Kiểm tra format:</h2>
+                        <ul>
+                            <li>Ngày: ${sample.date}</li>
+                            <li>Số: ${sample.numbers ? sample.numbers.join(', ') : 'N/A'}</li>
+                            <li>Jackpot: ${sample.jackpot ? sample.jackpot.toLocaleString('vi-VN') + ' ₫' : 'N/A'}</li>
+                            <li>Type of numbers[0]: ${typeof sample.numbers[0]}</li>
+                        </ul>
+                    `;
+                } else {
+                    dataDiv.innerHTML = '<div class="status error">❌ Không có dữ liệu Mega</div>';
+                }
+
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="status error">
+                        ❌ Lỗi tải dữ liệu:<br>
+                        ${error.message}<br><br>
+                        <strong>Chi tiết:</strong><br>
+                        ${error.stack}
+                    </div>
+                `;
+                console.error('Error:', error);
+            }
+        }
+
+        // Tự động chạy khi trang load
+        testLoadData();
+    </script>
+</body>
+
+</html>
