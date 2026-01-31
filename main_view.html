@@ -92,6 +92,17 @@
                 </svg>
                 <span>Lịch Sử</span>
             </li>
+            <li class="nav-item" data-section="multi-ai">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <circle cx="12" cy="12" r="8" />
+                    <line x1="12" y1="1" x2="12" y2="4" />
+                    <line x1="12" y1="20" x2="12" y2="23" />
+                    <line x1="1" y1="12" x2="4" y2="12" />
+                    <line x1="20" y1="12" x2="23" y2="12" />
+                </svg>
+                <span>🤖 Multi-AI</span>
+            </li>
         </ul>
     </nav>
 
@@ -289,6 +300,97 @@
             </div>
 
             <div id="pagination" class="pagination"></div>
+        </section>
+
+        <!-- Multi-AI Analysis Section -->
+        <section id="section-multi-ai" class="content-section">
+            <h2 class="section-title">🤖 Multi-AI Phân Tích (5 Thuật Toán)</h2>
+
+            <div class="ai-status-bar">
+                <span>Trạng thái: <strong id="ai-status">Sẵn sàng</strong></span>
+                <button id="run-all-ai" class="btn btn-primary">🚀 Chạy Tất Cả AI</button>
+            </div>
+
+            <div class="multi-ai-grid">
+                <!-- AI 1: Frequency Analysis -->
+                <div class="card ai-card">
+                    <div class="ai-header">
+                        <span class="ai-number">AI #1</span>
+                        <span class="ai-name">📊 Phân Tích Tần Suất Nâng Cao</span>
+                        <span class="ai-badge" id="ai1-status">⏸️</span>
+                    </div>
+                    <p class="card-desc">Phân tích tần suất xuất hiện theo nhiều góc độ</p>
+                    <div id="ai1-result" class="ai-result">
+                        <div class="ai-waiting">Chờ phân tích...</div>
+                    </div>
+                    <div id="ai1-prediction" class="ai-prediction"></div>
+                </div>
+
+                <!-- AI 2: Cycle Analysis -->
+                <div class="card ai-card">
+                    <div class="ai-header">
+                        <span class="ai-number">AI #2</span>
+                        <span class="ai-name">🔄 Phân Tích Chu Kỳ</span>
+                        <span class="ai-badge" id="ai2-status">⏸️</span>
+                    </div>
+                    <p class="card-desc">Tìm patterns theo ngày trong tuần, tuần trong tháng</p>
+                    <div id="ai2-result" class="ai-result">
+                        <div class="ai-waiting">Chờ phân tích...</div>
+                    </div>
+                    <div id="ai2-prediction" class="ai-prediction"></div>
+                </div>
+
+                <!-- AI 3: Cashflow Pattern -->
+                <div class="card ai-card">
+                    <div class="ai-header">
+                        <span class="ai-number">AI #3</span>
+                        <span class="ai-name">💰 Phân Tích Dòng Tiền</span>
+                        <span class="ai-badge" id="ai3-status">⏸️</span>
+                    </div>
+                    <p class="card-desc">Tìm mối liên hệ giữa jackpot và kết quả</p>
+                    <div id="ai3-result" class="ai-result">
+                        <div class="ai-waiting">Chờ phân tích...</div>
+                    </div>
+                    <div id="ai3-prediction" class="ai-prediction"></div>
+                </div>
+
+                <!-- AI 4: Genetic Algorithm -->
+                <div class="card ai-card">
+                    <div class="ai-header">
+                        <span class="ai-number">AI #4</span>
+                        <span class="ai-name">🧬 Thuật Toán Di Truyền</span>
+                        <span class="ai-badge" id="ai4-status">⏸️</span>
+                    </div>
+                    <p class="card-desc">Tiến hóa bộ số tối ưu qua nhiều thế hệ</p>
+                    <div id="ai4-result" class="ai-result">
+                        <div class="ai-waiting">Chờ phân tích...</div>
+                    </div>
+                    <div id="ai4-prediction" class="ai-prediction"></div>
+                </div>
+
+                <!-- AI 5: Neural Combination -->
+                <div class="card ai-card">
+                    <div class="ai-header">
+                        <span class="ai-number">AI #5</span>
+                        <span class="ai-name">🧠 Kết Hợp Tổng Hợp</span>
+                        <span class="ai-badge" id="ai5-status">⏸️</span>
+                    </div>
+                    <p class="card-desc">Kết hợp kết quả từ tất cả AI để đưa ra dự đoán cuối</p>
+                    <div id="ai5-result" class="ai-result">
+                        <div class="ai-waiting">Chờ phân tích...</div>
+                    </div>
+                    <div id="ai5-prediction" class="ai-prediction"></div>
+                </div>
+            </div>
+
+            <!-- Final Combined Result -->
+            <div class="card final-result-card">
+                <h3>🎯 KẾT QUẢ TỔNG HỢP TỪ 5 AI</h3>
+                <div id="final-ai-result" class="final-ai-result">
+                    <div class="ai-waiting">Nhấn "Chạy Tất Cả AI" để bắt đầu phân tích</div>
+                </div>
+                <div id="final-confidence" class="final-confidence"></div>
+            </div>
         </section>
     </main>
 

@@ -881,7 +881,399 @@ function renderPagination(totalItems) {
 }
 
 // ============================================
+// 🤖 MULTI-AI ANALYSIS SYSTEM
+// ============================================
+
+// Store AI predictions
+let aiPredictions = {
+    ai1: null,
+    ai2: null,
+    ai3: null,
+    ai4: null,
+    ai5: null
+};
+
+// AI #1: Advanced Frequency Analysis
+function runAI1_FrequencyAnalysis() {
+    const data = allData[currentMode];
+    const maxNum = currentMode === 'mega' ? 45 : 55;
+
+    // Count frequency for last 50, 100, all draws
+    const freq50 = new Array(maxNum + 1).fill(0);
+    const freq100 = new Array(maxNum + 1).fill(0);
+    const freqAll = new Array(maxNum + 1).fill(0);
+
+    data.slice(-50).forEach(d => d.numbers.forEach(n => freq50[n]++));
+    data.slice(-100).forEach(d => d.numbers.forEach(n => freq100[n]++));
+    data.forEach(d => d.numbers.forEach(n => freqAll[n]++));
+
+    // Calculate weighted scores
+    const scores = [];
+    for (let i = 1; i <= maxNum; i++) {
+        const score = (freq50[i] * 3) + (freq100[i] * 2) + (freqAll[i] * 1);
+        scores.push({ num: i, score, freq50: freq50[i], freq100: freq100[i], freqAll: freqAll[i] });
+    }
+
+    // Mix hot and cold numbers
+    scores.sort((a, b) => b.score - a.score);
+    const hot = scores.slice(0, 15).map(s => s.num);
+    const cold = scores.slice(-15).map(s => s.num);
+
+    // Select 4 from hot, 2 from cold
+    const prediction = [];
+    while (prediction.length < 4) {
+        const n = hot[Math.floor(Math.random() * hot.length)];
+        if (!prediction.includes(n)) prediction.push(n);
+    }
+    while (prediction.length < 6) {
+        const n = cold[Math.floor(Math.random() * cold.length)];
+        if (!prediction.includes(n)) prediction.push(n);
+    }
+
+    return {
+        prediction: prediction.sort((a, b) => a - b),
+        stats: { hot: hot.slice(0, 5), cold: cold.slice(0, 5) }
+    };
+}
+
+// AI #2: Cycle Analysis
+function runAI2_CycleAnalysis() {
+    const data = allData[currentMode];
+    const maxNum = currentMode === 'mega' ? 45 : 55;
+
+    // Analyze by day of week
+    const dayFreq = {};
+    for (let i = 0; i < 7; i++) dayFreq[i] = new Array(maxNum + 1).fill(0);
+
+    data.forEach(d => {
+        const date = new Date(d.date.split('/').reverse().join('-'));
+        const day = date.getDay();
+        d.numbers.forEach(n => dayFreq[day][n]++);
+    });
+
+    // Get today's best numbers
+    const today = new Date().getDay();
+    const todayScores = [];
+    for (let i = 1; i <= maxNum; i++) {
+        todayScores.push({ num: i, score: dayFreq[today][i] });
+    }
+    todayScores.sort((a, b) => b.score - a.score);
+
+    // Also check weekly patterns
+    const lastDraw = data[data.length - 1];
+    const lastNumbers = lastDraw ? lastDraw.numbers : [];
+
+    const prediction = [];
+    // Top 4 from day pattern
+    for (let i = 0; i < 20 && prediction.length < 4; i++) {
+        const n = todayScores[i].num;
+        if (!lastNumbers.includes(n) && !prediction.includes(n)) {
+            prediction.push(n);
+        }
+    }
+    // 2 random from bottom (less frequent today)
+    while (prediction.length < 6) {
+        const n = todayScores[Math.floor(Math.random() * 20) + 25].num;
+        if (!prediction.includes(n)) prediction.push(n);
+    }
+
+    return {
+        prediction: prediction.sort((a, b) => a - b),
+        stats: { dayPattern: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'][today] }
+    };
+}
+
+// AI #3: Cashflow Pattern Analysis
+function runAI3_CashflowAnalysis() {
+    const data = allData[currentMode];
+    const maxNum = currentMode === 'mega' ? 45 : 55;
+
+    // Categorize draws by jackpot level
+    const highJackpotNums = new Array(maxNum + 1).fill(0);
+    const lowJackpotNums = new Array(maxNum + 1).fill(0);
+    const risingNums = new Array(maxNum + 1).fill(0);
+
+    const avgJackpot = data.reduce((sum, d) => sum + (currentMode === 'mega' ? d.jackpot : d.jackpot1), 0) / data.length;
+
+    for (let i = 1; i < data.length; i++) {
+        const jp = currentMode === 'mega' ? data[i].jackpot : data[i].jackpot1;
+        const prevJp = currentMode === 'mega' ? data[i - 1].jackpot : data[i - 1].jackpot1;
+
+        if (jp > avgJackpot) {
+            data[i].numbers.forEach(n => highJackpotNums[n]++);
+        } else {
+            data[i].numbers.forEach(n => lowJackpotNums[n]++);
+        }
+
+        if (jp > prevJp) {
+            data[i].numbers.forEach(n => risingNums[n]++);
+        }
+    }
+
+    // Current jackpot analysis
+    const lastJp = currentMode === 'mega' ? data[data.length - 1].jackpot : data[data.length - 1].jackpot1;
+    const isHigh = lastJp > avgJackpot;
+
+    const targetNums = isHigh ? highJackpotNums : lowJackpotNums;
+    const scores = [];
+    for (let i = 1; i <= maxNum; i++) {
+        scores.push({ num: i, score: targetNums[i] + risingNums[i] });
+    }
+    scores.sort((a, b) => b.score - a.score);
+
+    const prediction = [];
+    for (let i = 0; i < 20 && prediction.length < 6; i++) {
+        if (!prediction.includes(scores[i].num)) {
+            prediction.push(scores[i].num);
+        }
+    }
+
+    return {
+        prediction: prediction.sort((a, b) => a - b),
+        stats: { jackpotLevel: isHigh ? 'Cao' : 'Thấp', avgJackpot: formatCurrency(avgJackpot) }
+    };
+}
+
+// AI #4: Simple Genetic Algorithm
+function runAI4_GeneticAlgorithm() {
+    const data = allData[currentMode];
+    const maxNum = currentMode === 'mega' ? 45 : 55;
+
+    // Calculate fitness based on historical frequency
+    const freq = new Array(maxNum + 1).fill(0);
+    data.forEach(d => d.numbers.forEach(n => freq[n]++));
+
+    // Generate population
+    const popSize = 50;
+    const generations = 20;
+    let population = [];
+
+    for (let i = 0; i < popSize; i++) {
+        const individual = [];
+        while (individual.length < 6) {
+            const n = Math.floor(Math.random() * maxNum) + 1;
+            if (!individual.includes(n)) individual.push(n);
+        }
+        population.push(individual);
+    }
+
+    // Fitness function
+    const fitness = (ind) => {
+        let score = 0;
+        ind.forEach(n => score += freq[n]);
+        // Bonus for balanced even/odd
+        const even = ind.filter(n => n % 2 === 0).length;
+        if (even >= 2 && even <= 4) score += 10;
+        // Bonus for spread
+        const sorted = [...ind].sort((a, b) => a - b);
+        const spread = sorted[5] - sorted[0];
+        if (spread > maxNum / 2) score += 5;
+        return score;
+    };
+
+    // Evolve
+    for (let gen = 0; gen < generations; gen++) {
+        // Sort by fitness
+        population.sort((a, b) => fitness(b) - fitness(a));
+
+        // Keep top half
+        population = population.slice(0, popSize / 2);
+
+        // Crossover & mutate to refill
+        while (population.length < popSize) {
+            const p1 = population[Math.floor(Math.random() * population.length)];
+            const p2 = population[Math.floor(Math.random() * population.length)];
+
+            // Crossover
+            const child = [...new Set([...p1.slice(0, 3), ...p2.slice(3, 6)])];
+            while (child.length < 6) {
+                const n = Math.floor(Math.random() * maxNum) + 1;
+                if (!child.includes(n)) child.push(n);
+            }
+
+            // Mutate (10% chance per gene)
+            for (let i = 0; i < 6; i++) {
+                if (Math.random() < 0.1) {
+                    let newN;
+                    do {
+                        newN = Math.floor(Math.random() * maxNum) + 1;
+                    } while (child.includes(newN));
+                    child[i] = newN;
+                }
+            }
+
+            population.push(child.slice(0, 6));
+        }
+    }
+
+    // Return best individual
+    population.sort((a, b) => fitness(b) - fitness(a));
+    const best = population[0];
+
+    return {
+        prediction: best.sort((a, b) => a - b),
+        stats: { generations: generations, fitness: fitness(best) }
+    };
+}
+
+// AI #5: Combined Analysis (voting from all AIs)
+function runAI5_Combined(ai1, ai2, ai3, ai4) {
+    const maxNum = currentMode === 'mega' ? 45 : 55;
+
+    // Count votes from all AIs
+    const votes = new Array(maxNum + 1).fill(0);
+
+    [ai1, ai2, ai3, ai4].forEach(result => {
+        if (result && result.prediction) {
+            result.prediction.forEach(n => votes[n] += 2);
+        }
+    });
+
+    // Add frequency data
+    const data = allData[currentMode];
+    data.slice(-30).forEach(d => d.numbers.forEach(n => votes[n]++));
+
+    // Get top voted
+    const ranked = [];
+    for (let i = 1; i <= maxNum; i++) {
+        ranked.push({ num: i, votes: votes[i] });
+    }
+    ranked.sort((a, b) => b.votes - a.votes);
+
+    const prediction = ranked.slice(0, 6).map(r => r.num);
+
+    return {
+        prediction: prediction.sort((a, b) => a - b),
+        stats: { method: 'Voting', topVotes: ranked[0].votes }
+    };
+}
+
+// Update AI status display
+function updateAIStatus(aiNum, status, result = null) {
+    const statusEl = document.getElementById(`ai${aiNum}-status`);
+    const resultEl = document.getElementById(`ai${aiNum}-result`);
+    const predEl = document.getElementById(`ai${aiNum}-prediction`);
+    const card = document.querySelector(`#ai${aiNum}-status`).closest('.ai-card');
+
+    if (status === 'running') {
+        statusEl.textContent = '⏳';
+        card.classList.add('running');
+        card.classList.remove('complete');
+        resultEl.innerHTML = '<div class="ai-waiting">Đang phân tích...</div>';
+        predEl.innerHTML = '';
+    } else if (status === 'complete' && result) {
+        statusEl.textContent = '✅';
+        card.classList.remove('running');
+        card.classList.add('complete');
+
+        // Display stats
+        let statsHtml = '<div class="result-stats">';
+        if (result.stats) {
+            Object.entries(result.stats).forEach(([key, val]) => {
+                if (Array.isArray(val)) {
+                    statsHtml += `<span>${key}: ${val.join(', ')}</span>`;
+                } else {
+                    statsHtml += `<span>${key}: ${val}</span>`;
+                }
+            });
+        }
+        statsHtml += '</div>';
+        resultEl.innerHTML = statsHtml;
+
+        // Display prediction balls
+        predEl.innerHTML = result.prediction.map(n => `<div class="ball">${n}</div>`).join('');
+    }
+}
+
+// Run all AIs
+async function runAllAIs() {
+    const runBtn = document.getElementById('run-all-ai');
+    const statusEl = document.getElementById('ai-status');
+    const finalResult = document.getElementById('final-ai-result');
+    const finalConfidence = document.getElementById('final-confidence');
+
+    runBtn.disabled = true;
+    statusEl.textContent = 'Đang chạy...';
+    statusEl.style.color = '#f59e0b';
+
+    // Reset
+    finalResult.innerHTML = '<div class="ai-waiting">Đang xử lý các mô hình AI...</div>';
+    finalConfidence.innerHTML = '';
+
+    // Run AI 1
+    updateAIStatus(1, 'running');
+    await new Promise(r => setTimeout(r, 500));
+    aiPredictions.ai1 = runAI1_FrequencyAnalysis();
+    updateAIStatus(1, 'complete', aiPredictions.ai1);
+
+    // Run AI 2
+    updateAIStatus(2, 'running');
+    await new Promise(r => setTimeout(r, 500));
+    aiPredictions.ai2 = runAI2_CycleAnalysis();
+    updateAIStatus(2, 'complete', aiPredictions.ai2);
+
+    // Run AI 3
+    updateAIStatus(3, 'running');
+    await new Promise(r => setTimeout(r, 500));
+    aiPredictions.ai3 = runAI3_CashflowAnalysis();
+    updateAIStatus(3, 'complete', aiPredictions.ai3);
+
+    // Run AI 4
+    updateAIStatus(4, 'running');
+    await new Promise(r => setTimeout(r, 700));
+    aiPredictions.ai4 = runAI4_GeneticAlgorithm();
+    updateAIStatus(4, 'complete', aiPredictions.ai4);
+
+    // Run AI 5 (Combined)
+    updateAIStatus(5, 'running');
+    await new Promise(r => setTimeout(r, 500));
+    aiPredictions.ai5 = runAI5_Combined(
+        aiPredictions.ai1,
+        aiPredictions.ai2,
+        aiPredictions.ai3,
+        aiPredictions.ai4
+    );
+    updateAIStatus(5, 'complete', aiPredictions.ai5);
+
+    // Final result
+    const finalPrediction = aiPredictions.ai5.prediction;
+    finalResult.innerHTML = `
+        <div class="balls">
+            ${finalPrediction.map(n => `<div class="ball">${n}</div>`).join('')}
+        </div>
+        <p>Bộ số được 5 AI đồng thuận cao nhất</p>
+    `;
+
+    // Calculate "confidence" based on agreement
+    const allPreds = [aiPredictions.ai1, aiPredictions.ai2, aiPredictions.ai3, aiPredictions.ai4].map(p => p.prediction);
+    let agreement = 0;
+    finalPrediction.forEach(n => {
+        allPreds.forEach(pred => {
+            if (pred.includes(n)) agreement++;
+        });
+    });
+    const confidence = Math.min(95, 60 + (agreement * 2));
+
+    finalConfidence.innerHTML = `Độ đồng thuận: <strong>${confidence}%</strong>`;
+
+    statusEl.textContent = 'Hoàn thành!';
+    statusEl.style.color = '#10b981';
+    runBtn.disabled = false;
+
+    showNotification('Đã hoàn thành phân tích từ 5 mô hình AI!', 'success');
+}
+
+// Setup Multi-AI event listener
+function setupMultiAI() {
+    const runBtn = document.getElementById('run-all-ai');
+    if (runBtn) {
+        runBtn.addEventListener('click', runAllAIs);
+    }
+}
+
+// ============================================
 // 🚀 START APPLICATION
 // ============================================
 
 init();
+setupMultiAI();
