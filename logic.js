@@ -5,7 +5,7 @@
 let allData = null;
 let currentMode = 'mega';
 let currentPage = 1;
-const rowsPerPage = 50;
+const rowsPerPage = 99999; // Show all data without pagination
 
 let jackpotChart = null;
 let frequencyChart = null;
@@ -17,6 +17,12 @@ let rangeChart = null;
 // ============================================
 
 async function init() {
+    // Check auth
+    if (!sessionStorage.getItem('auth')) {
+        window.location.href = 'index.html';
+        return;
+    }
+
     try {
         const response = await fetch('db_storage.json');
         const rawData = await response.json();
@@ -806,9 +812,8 @@ function renderTable(searchTerm = '') {
 
     const base = currentMode === 'mega' ? 12000000000 : 30000000000;
 
-    const start = (currentPage - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const paginated = filtered.slice(start, end);
+    // Show ALL data without pagination
+    const paginated = filtered;
 
     paginated.forEach((d, idx) => {
         const tr = document.createElement('tr');
@@ -842,7 +847,9 @@ function renderTable(searchTerm = '') {
         tbody.appendChild(tr);
     });
 
-    renderPagination(filtered.length);
+    // Pagination disabled - showing all data
+    // renderPagination(filtered.length);
+    document.getElementById('pagination').innerHTML = '';
 }
 
 function renderPagination(totalItems) {
