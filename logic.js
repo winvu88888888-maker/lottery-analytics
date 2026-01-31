@@ -1272,8 +1272,162 @@ function setupMultiAI() {
 }
 
 // ============================================
+// 📊 BACKTESTING SYSTEM
+// ============================================
+
+// Backtest a single AI on historical data
+function backtestAI(aiFunction, startIndex = 100) {
+    const data = allData[currentMode];
+    const results = {
+        totalTests: 0,
+        totalMatches: 0,
+        match0: 0,
+        match1: 0,
+        match2: 0,
+        match3: 0,
+        match4: 0,
+        match5: 0,
+        match6: 0
+    };
+
+    // Test from startIndex to end
+    for (let i = startIndex; i < data.length; i++) {
+        // Create temporary data slice (only data before this draw)
+        const tempData = data.slice(0, i);
+
+        // Store original and swap
+        const originalData = allData[currentMode];
+        allData[currentMode] = tempData;
+
+        try {
+            // Run AI prediction
+            const prediction = aiFunction();
+
+            // Restore original data
+            allData[currentMode] = originalData;
+
+            // Compare with actual result
+            const actual = data[i].numbers;
+            let matches = 0;
+            prediction.prediction.forEach(n => {
+                if (actual.includes(n)) matches++;
+            });
+
+            results.totalTests++;
+            results.totalMatches += matches;
+            results[`match${matches}`]++;
+        } catch (e) {
+            // Restore on error
+            allData[currentMode] = originalData;
+        }
+    }
+
+    return results;
+}
+
+// Run full backtest on all AIs
+async function runFullBacktest() {
+    const backtestBtn = document.getElementById('run-backtest');
+    const resultsDiv = document.getElementById('backtest-results');
+
+    if (!backtestBtn || !resultsDiv) return;
+
+    backtestBtn.disabled = true;
+    backtestBtn.textContent = '⏳ Đang kiểm tra...';
+
+    resultsDiv.innerHTML = '<div class="ai-waiting">Đang chạy backtest trên dữ liệu lịch sử... Vui lòng đợi...</div>';
+
+    await new Promise(r => setTimeout(r, 100));
+
+    const aiTests = [
+        { name: 'AI #1: Phân Tích Tần Suất', fn: runAI1_FrequencyAnalysis },
+        { name: 'AI #2: Phân Tích Chu Kỳ', fn: runAI2_CycleAnalysis },
+        { name: 'AI #3: Phân Tích Dòng Tiền', fn: runAI3_CashflowAnalysis },
+        { name: 'AI #4: Thuật Toán Di Truyền', fn: runAI4_GeneticAlgorithm }
+    ];
+
+    const allResults = [];
+
+    for (const ai of aiTests) {
+        resultsDiv.innerHTML = `<div class="ai-waiting">Đang test ${ai.name}...</div>`;
+        await new Promise(r => setTimeout(r, 50));
+
+        const result = backtestAI(ai.fn, 100);
+        result.name = ai.name;
+        result.avgMatches = (result.totalMatches / result.totalTests).toFixed(2);
+        result.accuracy = ((result.totalMatches / (result.totalTests * 6)) * 100).toFixed(2);
+        allResults.push(result);
+    }
+
+    // Display results
+    let html = `
+        <h4>📊 Kết Quả Backtest (${allResults[0].totalTests} kỳ)</h4>
+        <p class="backtest-note">⚠️ Lưu ý: Xổ số là ngẫu nhiên, độ chính xác ngẫu nhiên thuần túy là ~13.3% (6/45)</p>
+        <table class="backtest-table">
+            <thead>
+                <tr>
+                    <th>Mô Hình AI</th>
+                    <th>TB Số Trùng</th>
+                    <th>% Chính Xác</th>
+                    <th>0 số</th>
+                    <th>1 số</th>
+                    <th>2 số</th>
+                    <th>3 số</th>
+                    <th>4+ số</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    allResults.forEach(r => {
+        const isGood = parseFloat(r.accuracy) > 13.5;
+        html += `
+            <tr>
+                <td>${r.name}</td>
+                <td><strong>${r.avgMatches}</strong>/6</td>
+                <td class="${isGood ? 'good' : ''}">${r.accuracy}%</td>
+                <td>${r.match0}</td>
+                <td>${r.match1}</td>
+                <td>${r.match2}</td>
+                <td>${r.match3}</td>
+                <td>${r.match4 + r.match5 + r.match6}</td>
+            </tr>
+        `;
+    });
+
+    html += `
+            </tbody>
+        </table>
+        <div class="backtest-summary">
+            <p>📈 <strong>Giải thích:</strong></p>
+            <ul>
+                <li><strong>TB Số Trùng:</strong> Trung bình số lượng số trùng với kết quả thực tế</li>
+                <li><strong>% Chính Xác:</strong> (Tổng số trùng / Tổng số dự đoán) × 100</li>
+                <li><strong>Ngẫu nhiên thuần túy:</strong> ~0.8 số/kỳ (13.3%)</li>
+            </ul>
+        </div>
+    `;
+
+    resultsDiv.innerHTML = html;
+
+    backtestBtn.disabled = false;
+    backtestBtn.textContent = '🔬 Chạy Backtest Lại';
+
+    showNotification('Hoàn thành backtest! Xem kết quả bên dưới.', 'info');
+}
+
+// Setup backtest
+function setupBacktest() {
+    const btn = document.getElementById('run-backtest');
+    if (btn) {
+        btn.addEventListener('click', runFullBacktest);
+    }
+}
+
+// ============================================
 // 🚀 START APPLICATION
 // ============================================
 
 init();
 setupMultiAI();
+setupBacktest();
