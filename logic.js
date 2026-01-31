@@ -813,6 +813,7 @@ function renderTable(searchTerm = '') {
     const base = currentMode === 'mega' ? 12000000000 : 30000000000;
 
     // Show ALL data without pagination
+    const start = 0;
     const paginated = filtered;
 
     paginated.forEach((d, idx) => {
